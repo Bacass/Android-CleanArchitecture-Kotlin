@@ -20,18 +20,40 @@ val myModule = module {
     single { provideRetrofit() }
     single { PreferenceHelper(get()) }
 
+    /**
+     * provideApi() 는 Retrofit 를 인자로 받는다.
+     * 위에서 만들어준 single { provideRetrofit() } 가 있기 때문에 get()을 쓰면 된다.
+     */
     factory { provideApi(get()) }
+
+    /**
+     * RemoteDataSource 는 ApiService 를 인자로 받는다.
+     * 위에서 만들어준 factory { provideApi(get()) } 가 있기 때문에 get()을 쓰면 된다.
+     */
     factory { RemoteDataSource(get()) }
 
     // repositories
+    /**
+     * LoginRepositoryImpl 은 RemoteDataSource 를 인자로 받고 LoginRepository 인터페이스를 구현한다.
+     * 위에서 만들어준 factory { RemoteDataSource(get()) } 가 있기 때문에 get()을 쓰면 된다.
+     */
     single<LoginRepository> { LoginRepositoryImpl(get()) }
     single<AllUserRepository> { AllUserRepositoryImpl(get()) }
 
     // Use cases
+    /**
+     * LoginUseCase 는 LoginRepository 를 인자로 받는다.
+     * 실제로는 LoginRepository 인터페이스를 구현한 LoginRepositoryImpl가 전달된다.
+     * 위에서 만들어준 single<LoginRepository> { LoginRepositoryImpl(get()) } 가 있기 때문에 get()을 쓰면 된다.
+     */
     factory { LoginUseCase(get()) }
     factory { AllUserUseCase(get()) }
 
     // View models
+    /**
+     * LoginViewModel 은 LoginUseCase 를 인자로 받는다.
+     * 위에서 만들어준 factory { LoginUseCase(get()) } 가 있기 때문에 get()을 쓰면 된다.
+     */
     viewModel { LoginViewModel(get(), get()) }
     viewModel { AllUserViewModel(get(), get()) }
 }
